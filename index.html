@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forms - Dhainagar High School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #39ff14;
+            --neon-orange: #ff9900;
+            --bg-dark: #070913;
+            --container-bg: rgba(16, 21, 48, 0.85);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 243, 255, 0.1), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(255, 0, 255, 0.1), transparent 25%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--container-bg);
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2), 
+                        inset 0 0 20px rgba(255, 0, 255, 0.1);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50px; left: -50px;
+            width: 100px; height: 100px;
+            background: var(--neon-pink);
+            filter: blur(80px);
+            z-index: 0;
+        }
+
+        header {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid var(--neon-blue);
+            box-shadow: 0 0 15px var(--neon-blue);
+            margin-bottom: 15px;
+            background-color: #fff; 
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .details {
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 3px;
+            letter-spacing: 1px;
+        }
+
+        .address {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 15px;
+            margin-top: 5px;
+        }
+
+        .sub-title {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 22px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 2px solid var(--neon-pink);
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* Forms Section Styles */
+        .forms-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .accordion-btn, .direct-link {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--neon-blue);
+            color: #fff;
+            cursor: pointer;
+            padding: 16px 20px;
+            width: 100%;
+            text-align: left;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 243, 255, 0.1);
+        }
+
+        .direct-link {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 8px rgba(255, 0, 255, 0.1);
+        }
+
+        .accordion-btn::after {
+            content: '\002B'; /* Plus icon */
+            font-size: 24px;
+            color: var(--neon-blue);
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-btn.active::after {
+            content: '\2212'; /* Minus icon */
+            transform: rotate(90deg);
+            color: var(--bg-dark);
+        }
+
+        .accordion-btn:hover, .accordion-btn.active {
+            background: var(--neon-blue);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        .direct-link:hover {
+            background: var(--neon-pink);
+            color: #fff;
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+
+        .panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0 0 10px 10px;
+            margin-top: -10px;
+            padding: 0 15px;
+            opacity: 0;
+        }
+
+        .panel.show {
+            opacity: 1;
+            margin-bottom: 5px;
+        }
+
+        .panel-inner {
+            padding: 20px 0 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sub-heading {
+            font-size: 14px;
+            color: var(--neon-green);
+            margin-bottom: -5px;
+            font-weight: 600;
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .sub-btn {
+            background: transparent;
+            border: 1px solid var(--neon-pink);
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .sub-btn:hover {
+            background: var(--neon-pink);
+            color: #fff;
+            box-shadow: 0 0 15px var(--neon-pink);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 22px; }
+            .sub-title { font-size: 18px; }
+            .accordion-btn, .direct-link { font-size: 15px; padding: 14px 15px; }
+            .btn-group { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <img src="school_logo_preview.png" alt="Dhainagar High School Logo" class="logo" onerror="this.src='https://via.placeholder.com/100/000000/00f3ff?text=DHS'">
+            
+            <h1>Dhainagar High School (H.S.)</h1>
+            <p class="details">Co. Ed. & Govt. Sponsored</p>
+            <p class="details">Estd.: 1973</p>
+            <p class="address">Telighata, Tapan, Dakshin Dinajpur, 733127</p>
+            <h2 class="sub-title">Forms</h2>
+        </header>
+
+        <div class="forms-container">
+            
+            <!-- IX Registration Form -->
+            <button class="accordion-btn">IX Registration Form</button>
+            <div class="panel">
+                <div class="panel-inner">
+                    <div class="btn-group">
+                        <a href="https://dhs2026.github.io/IX-Registration-Form/" target="_blank" class="sub-btn">Link 1</a>
+                        <a href="https://script.google.com/macros/s/AKfycbzaqQZqBpDlZu-jTYvKUam0kSMoDYms2s-n7w_OK7K6mxejlBg3cgfx84Rky4drsaw/exec" target="_blank" class="sub-btn">Link 2</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admission V to IX -->
+            <button class="accordion-btn">Admission V to IX</button>
+            <div class="panel">
+                <div class="panel-inner">
+                    <p class="sub-heading">English Medium</p>
+                    <div class="btn-group">
+                        <a href="https://dhs2026.github.io/Admission-form-5_9/" target="_blank" class="sub-btn">Link 1</a>
+                        <a href="https://script.google.com/macros/s/AKfycbxMkgehfX3rr1EGhcp7cB4kU4PDP3JJJcq_BwDgp8YuCXpU6993Cs6IhuSgV_C7wE32/exec" target="_blank" class="sub-btn">Link 2</a>
+                    </div>
+                    
+                    <p class="sub-heading">Bengali Medium</p>
+                    <div class="btn-group">
+                        <a href="https://dhs2026.github.io/Admission-form-Beng_5_9/" target="_blank" class="sub-btn">Link 1</a>
+                        <a href="https://script.google.com/macros/s/AKfycbwgQ-rclKgNOO3VtdWp2FEmSg3Y2xkm6Blb7EGw56hpOvCJ2HQzZCdWlLmKvAxTjRLC/exec" target="_blank" class="sub-btn">Link 2</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admission XI -->
+            <button class="accordion-btn">Admission XI</button>
+            <div class="panel">
+                <div class="panel-inner">
+                    <div class="btn-group">
+                        <a href="https://dhs2026.github.io/DHS_Admission_XI/" target="_blank" class="sub-btn">Link 1</a>
+                        <a href="https://script.google.com/macros/s/AKfycbwI6VIJr861CI3XOJH-slFVfIBH5Dwog39pfyRPOYj1fxki4Lg9MBOIBTMDYpGapNWA/exec" target="_blank" class="sub-btn">Link 2</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MP PPS/PPR (Direct Link) -->
+            <a href="https://script.google.com/macros/s/AKfycbxZfuUNAnlc_hcbUdxEoyVKyz1KT70vDTwbWM81RKkzA-OxS3Fz8Plz8g4hwG56gYk/exec" target="_blank" class="direct-link">
+                MP PPS/PPR <span>&#8594;</span>
+            </a>
+
+            <!-- School Leaving Certificate (Direct Link) -->
+            <a href="https://script.google.com/macros/s/AKfycby_LpjPVKh1GBu6ygXuHcu1KxXV2IvoQHa5awqUH1Fu01da35hyjreSyMAr_I0FGzbg/exec" target="_blank" class="direct-link">
+                School Leaving Certificate <span>&#8594;</span>
+            </a>
+
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for Accordion Animation
+        const accordions = document.querySelectorAll('.accordion-btn');
+
+        accordions.forEach(acc => {
+            acc.addEventListener('click', function() {
+                // Close other open panels for a cleaner UI (Optional)
+                accordions.forEach(otherAcc => {
+                    if (otherAcc !== this && otherAcc.classList.contains('active')) {
+                        otherAcc.classList.remove('active');
+                        otherAcc.nextElementSibling.style.maxHeight = null;
+                        otherAcc.nextElementSibling.classList.remove('show');
+                    }
+                });
+
+                // Toggle current panel
+                this.classList.toggle('active');
+                const panel = this.nextElementSibling;
+                
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                    panel.classList.remove('show');
+                } else {
+                    panel.classList.add('show');
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
